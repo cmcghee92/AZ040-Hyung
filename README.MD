@@ -25,11 +25,11 @@ C:\GPOBackups\
 
 # Phase2: Core Scripts
 ## Backup-GPOAutomated.ps1: backup engine
-Collects inventory of GPOs - Backup-GPO extract domain policies
-Generates Metadata & Manifest - Manifest.json matching GPO DN to the AD GUIDs, backup GUIDs, WMI filter bindings
-Captures OU links - OULinks.json mapping all policy links 
-Exports reports - Get-GPOReport to export .html and .xml files 
-Calculates expiration date from the Retention window
-Generates the backup log in C:\GPOBackups 
+* Collects inventory of GPOs - Backup-GPO extract domain policies
+* Generates Metadata & Manifest - Manifest.json matching GPO DN to the AD GUIDs, backup GUIDs, WMI filter bindings
+* Captures OU links - OULinks.json mapping all policy links 
+* Exports reports - Get-GPOReport to export .html and .xml files 
+* Calculates expiration date from the Retention window
+* Generates the backup log in C:\GPOBackups 
 
 # Phase3: 
