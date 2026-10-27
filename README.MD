@@ -15,13 +15,13 @@ Structures the backup storage schema "C:\GPOBackups"
 
 ### Backup Storage Schema structure
 C:\GPOBackups\
-├── 2026-10-26_140000\
-│   ├── Metadata
-│   ├── RawGPOs
-│   ├── Reports\
-│   │   ├── HTML
-│   │   └── XML
-│   └── {GPO-GUID}\
+- 2026-10-26_140000\
+  - Metadata
+  - RawGPOs
+  - Reports
+     - HTML
+     - XML
+  - {GPO-GUID}\
 
 # Phase2: Core Scripts
 ## Backup-GPOAutomated.ps1: backup engine
