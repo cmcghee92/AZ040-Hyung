@@ -1,4 +1,5 @@
 
+#Requires -Version 7.0
 [CmdletBinding()]
 param(
     [Parameter()]
@@ -30,7 +31,7 @@ if (-not (Get-Module -ListAvailable -Name ActiveDirectory)) {
 }
 Import-Module ActiveDirectory -UseWindowsPowerShell -WarningAction SilentlyContinue
 
-if (-not (Get-Module -ListAvailable -Name GroupPolicy)) {
+if (-not (Get-Module -ListAvailable -Name GroupPolicy -SkipEditionCheck)) {
     if ($IsElevated) {
         Write-Host "[-] GroupPolicy module not found. Installing RSAT-GPMC feature..." 
         Add-WindowsCapability -Online -Name "Rsat.GroupPolicy.Management.Tools~~~~0.0.1.0"
