@@ -8,9 +8,23 @@ param(
     [int]$RetentionDays = 30
 )
 
+# 0. PowerShell Version Check
+if ($PSVersionTable.PSVersion.Major -ne 7) {
+    Write-Warning "This script is designed for PowerShell 7. You are currently running PowerShell $($PSVersionTable.PSVersion)."
+}
+
 # 1. Compatibility Imports
 Write-Host "[-] Loading ActiveDirectory and GroupPolicy modules..." 
+if (-not (Get-Module -ListAvailable -Name ActiveDirectory)) {
+    Write-Host "[-] ActiveDirectory module not found. Installing..." 
+    Install-Module -Name ActiveDirectory -Force -Scope CurrentUser -Confirm:$false
+}
 Import-Module ActiveDirectory -UseWindowsPowerShell -WarningAction SilentlyContinue
+
+if (-not (Get-Module -ListAvailable -Name GroupPolicy)) {
+    Write-Host "[-] GroupPolicy module not found. Installing..." 
+    Install-Module -Name GroupPolicy -Force -Scope CurrentUser -Confirm:$false
+}
 Import-Module GroupPolicy -UseWindowsPowerShell -WarningAction SilentlyContinue
 
 # 2. Invoke Initialize-GPOStorageSchema.ps1
