@@ -1,4 +1,4 @@
-#Requires -Version 7.0
+
 [CmdletBinding()]
 param(
     [Parameter()]
@@ -14,19 +14,32 @@ if ($PSVersionTable.PSVersion.Major -ne 7) {
 }
 
 # 1. Compatibility Imports
+# ActiveDirectory and GroupPolicy ship as RSAT Windows features, not PowerShell Gallery
+# modules, so they must be installed via Add-WindowsCapability (requires an elevated session).
+$IsElevated = ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)
+
 Write-Host "[-] Loading ActiveDirectory and GroupPolicy modules..." 
 if (-not (Get-Module -ListAvailable -Name ActiveDirectory)) {
-    Write-Host "[-] ActiveDirectory module not found. Installing..." 
-    Install-Module -Name ActiveDirectory -Force -Scope CurrentUser -Confirm:$false
+    if ($IsElevated) {
+        Write-Host "[-] ActiveDirectory module not found. Installing RSAT-AD-PowerShell feature..." 
+        Add-WindowsCapability -Online -Name "Rsat.ActiveDirectory.DS-LDS.Tools~~~~0.0.1.0"
+    }
+    else {
+        Write-Warning "The ActiveDirectory module is not installed and this session is not elevated. Re-run as Administrator to install it automatically, or run: Add-WindowsCapability -Online -Name 'Rsat.ActiveDirectory.DS-LDS.Tools~~~~0.0.1.0'"
+    }
 }
 Import-Module ActiveDirectory -UseWindowsPowerShell -WarningAction SilentlyContinue
 
 if (-not (Get-Module -ListAvailable -Name GroupPolicy)) {
-    Write-Host "[-] GroupPolicy module not found. Installing..." 
-    Install-Module -Name GroupPolicy -Force -Scope CurrentUser -Confirm:$false
+    if ($IsElevated) {
+        Write-Host "[-] GroupPolicy module not found. Installing RSAT-GPMC feature..." 
+        Add-WindowsCapability -Online -Name "Rsat.GroupPolicy.Management.Tools~~~~0.0.1.0"
+    }
+    else {
+        Write-Warning "The GroupPolicy module is not installed and this session is not elevated. Re-run as Administrator to install it automatically, or run: Add-WindowsCapability -Online -Name 'Rsat.GroupPolicy.Management.Tools~~~~0.0.1.0'"
+    }
 }
 Import-Module GroupPolicy -UseWindowsPowerShell -WarningAction SilentlyContinue
-
 # 2. Invoke Initialize-GPOStorageSchema.ps1
 $InitScript = Join-Path -Path $PSScriptRoot -ChildPath "Initialize-GPOStorageSchema.ps1"
 if (-not (Test-Path -Path $InitScript)) {
