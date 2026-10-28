@@ -9,8 +9,8 @@ param(
 )
 
 # 0. PowerShell Version Check
-if ($PSVersionTable.PSVersion.Major -ne 7) {
-    Write-Warning "This script is designed for PowerShell 7. You are currently running PowerShell $($PSVersionTable.PSVersion)."
+if ($PSVersionTable.PSVersion.Major -lt 7) {
+    throw "This script requires PowerShell 7.0 or later. You are currently running PowerShell $($PSVersionTable.PSVersion)."
 }
 
 # 1. Compatibility Imports
